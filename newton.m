@@ -1,12 +1,11 @@
-function [f,x] = newton(func,deri,X) 
+function [f,xr] = newton(func,deri,x0) 
 
-% Here we use Newton's Method for a one dimensional problem. Our 
-% goal is to find a x* such that |f(x*)| = 0 for a maximum number of 
-% iterations. 
+% Aquí se utiliza el método de Newton para encontrar una x * tal que | f (x *) | = 0 
+% para un número máximo de iteraciones.
 
-% Input:
+% Entradas:
 %
-% string func        string with the function to evaluate in term of x
+% string func        La función objetivo M(x,t)= x3*exp(x1t)  +  x4*exp(x2t)
 % string deri        string with the derivity of the function to evaluate
 %                    in term of x
 % float  x0          the initial point
