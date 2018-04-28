@@ -6,28 +6,34 @@ Xi = Xo;
 
 t = data(:,1);
 
-while (iter < 100) && (convergencia >= error)
+[f, g, H] = myfun(Xo,data);
+
+while (iter < 1000) && (convergencia >= error)
     
     %cadena = sprintf('iteracion No:', iter);
     %disp(iter)
-    [f, g, H] = myfun(Xo,data);
-    pk = g';
+    
+    pk = -g';
     
     Xj = Xi + alfa.*pk;
     iter = iter + 1;
     
     convergencia = norm(Xj - Xi);
-    %disp(convergencia)
+    disp("Convergencia")
+    disp(convergencia)
     
     disp("Esto es XJ - Xi")
     disp(Xj-Xi)
+
     
     Xi = Xj;
+    
+    [f, g, H] = myfun(Xi,data);
 end
 
 fsd = (Xi(1,3)*exp(Xi(1,1).*t))+(Xi(1,4)*exp(Xi(1,2).*t));
 
 figure(3)
-plot(fsd)
+plot(t,fsd)
 
 end
