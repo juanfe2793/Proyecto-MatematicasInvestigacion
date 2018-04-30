@@ -1,4 +1,4 @@
-function [f, g, H] = myfun(X, data)
+function [f, g, H] = myfun(X, data, iter)
 
 t = data(:,1);
 y = data(:,2);
