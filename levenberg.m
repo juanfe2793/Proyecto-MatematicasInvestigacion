@@ -1,0 +1,1 @@
+function [f,xr] = levenberg(func,deri,x0) 

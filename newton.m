@@ -1,5 +1,8 @@
 function [f,xr] = newton(func,deri,x0) 
 
+%Función que se encarga de ejecutar el algoritmo de Newton
+% Proyecto desarrollado por: Jaime Aristizabal y Juan Felipe Gómez.
+
 % Aquí se utiliza el método de Newton para encontrar una x * tal que | f (x *) | = 0 
 % para un número máximo de iteraciones.
 

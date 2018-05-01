@@ -1,5 +1,8 @@
 function alpha = linesearch(x,deltax,f,i)
 
+%Función encargada de calcular un alfa para busqueda lineal
+% Proyecto desarrollado por: Jaime Aristizabal y Juan Felipe Gómez.
+
 global func
 
 %Line Search
