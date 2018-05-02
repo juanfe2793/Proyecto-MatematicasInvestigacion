@@ -1,58 +1,86 @@
-function [f,xr] = newton(func,deri,x0) 
+%function [f,xr] = newton(func,deri,x0) 
 
-%Función que se encarga de ejecutar el algoritmo de Newton
+%Algoritmo Calculo Algoritmo Newton.
 % Proyecto desarrollado por: Jaime Aristizabal y Juan Felipe Gómez.
 
-% Aquí se utiliza el método de Newton para encontrar una x * tal que | f (x *) | = 0 
-% para un número máximo de iteraciones.
+%Se cargan las variables necesarias para el desarrollo del algoritmo
+convergencia = 1;
+iter = 0;
+Xi = Xo;
+error = 1e-6;
+alfa = 1;
+max_iter = 10000;
 
-% Entradas:
-%
-% string func        La función objetivo M(x,t)= x3*exp(x1t)  +  x4*exp(x2t)
-% string deri        string with the derivity of the function to evaluate
-%                    in term of x
-% float  x0          the initial point
-% int    max_i       maximun number of iterations
-% float  tol         tolerance of the Newton's method
+%--------- Calculo Inicial de la función, gradiente y Hessiana ------------
+[f, g, Hn] = myfun(Xi,data);
 
-% Output:
-%
-% A table with the result of the execution with this format:
-%
-%                     i   |     xi      |  abs(f(xi))
-%                   -----------------------------------
-%                         |             |
+while  (iter < max_iter) && (convergencia >= error)
 
-global x_init
-
-fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)| \n');
-fprintf('-----------------------------------------------------------------------------------\n');
-    %This is the header of the output matrix
-              
-x_     = x_init;
-for i=0:max_i   % This is the statement to begin the iterative process
+    %-------- Configuración Algoritmo Newton--------------
+    pk = Hn\(-g);
     
-    f   =   eval(func);         %  Function evaluation
-    df  =   eval(deri);         %  Derivative evaluation
-        
-    x_    = x;
-
-    if(abs(f) < tol),                       %This is the stopping criteria  
-        fprintf('Solution found!!!\n\n'); 
-        fprintf('The solution found: x = %e\n', x); 
-        break; 
-    end; 
+   %-----------Calculos de cada iteración X ----------------------------
+   
+   Xj = Xi + alfa.*pk;
+    iter = iter + 1;
     
-    deltax  =   -f/df;           % Find the Newton step. 
-    x       =   x + deltax;      % Update x
+    convergencia = norm(Xj - Xi);
     
+    Xi = Xj;
     
-    error = abs(x - x_ );        
-    fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',i,x,abs(f),error);  % print output matrix
+    fsd = (Xi(1,3)*exp(Xi(1,1).*t))+(Xi(1,4)*exp(Xi(1,2).*t));
+    
+    %------------------------ Código para pintar la gráfica --------------
+    figure(1)
+    plot(t,fsd,'r')
+    xlabel('t');
+    ylabel('y');
+    title(['Algoritmo Newton. Iteraciones: ' num2str(iter)]);
+    %grid
+    hold off
 
-end 
+    %------------- Se vuelve a calcular myfun --------------------
+    
+    [f, g, Hn] = myfun(Xi,data);
+    
+    %--------- Header para la tabla ------------------
 
-if i==max_i, 
-    fprintf('The solution was not found after %d iterations.\n', max_i); 
-end 
+    fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
+    fprintf('-----------------------------------------------------------------------------------\n');
+    fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
+
+end
+
+disp(['>>Se encontró una función objetivo cercana a cero!!!: Se usaron ' num2str(iter) ' iteraciones!']);
+        disp(['El Vector X encontrado que soluciona el problema de mínimos cuadrados es: ' mat2str(Xi)]);
+
+
+inicial = (Xo(1,3)*exp(Xo(1,1).*t))+(Xo(1,4)*exp(Xo(1,2).*t));
+optimo = (Xp(1,3)*exp(Xp(1,1).*t))+(Xp(1,4)*exp(Xp(1,2).*t));
+
+%------------- Código para gráfico inicial ----------------------
+
+hold on
+figure(1)
+plot(t,inicial,'k')
+
+%------------- Código para gráfico Optimo ----------------------
+
+hold on
+figure(1)
+plot(t,optimo,'b')
+
+
+%------------- Código para gráfico puntos data ----------------------
+
+hold on
+figure(1)
+plot(t,y,'g:x')
+
+%------------- Código para las leyendas.
+figure(1)
+legend('Xk','Xo','X*','y*')
+
+
+%end 
     

@@ -10,31 +10,34 @@ iter = 0;
 Xi = Xo;
 error = 1e-6;
 alfa = 1;
-
+max_iter = 10000;
 
 %--------- Calculo Inicial de la función, gradiente y Hessiana ------------
 [f, g, Hn] = myfun(Xi,data);
 
-while  (iter < 10000) && (convergencia >= error)
+
+
+while  (iter < max_iter) && (convergencia >= error)
    
     %cadena = sprintf('iteracion No:', iter);
     %disp(iter)
     
     %-------- Configuración Dirección Máximo Descenso--------------
     pk = -g';
-    disp('tamaño de g')
-    disp(size(pk))
+    %disp('tamaño de g')
+    %disp(size(pk))
     
     %-----------Calculos de cada iteración X ----------------------------
     Xj = Xi + alfa.*pk;
     iter = iter + 1;
     
     convergencia = norm(Xj - Xi);
-    disp("Convergencia")
-    disp(convergencia)
+    %convergencia = abs(Xj - Xi);
+    %disp("Convergencia")
+    %disp(convergencia)
     
-    disp("Esto es XJ")
-    disp(Xj)
+    %disp("Esto es XJ")
+    %disp(Xj)
 
     
     Xi = Xj;
@@ -53,7 +56,19 @@ while  (iter < 10000) && (convergencia >= error)
     %------------- Se vuelve a calcular myfun --------------------
     
     [f, g, Hn] = myfun(Xi,data);
+    
+    %--------- Header para la tabla ------------------
+
+    fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
+    fprintf('-----------------------------------------------------------------------------------\n');
+    fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
+
 end
+
+disp(['>>Se encontró una función objetivo cercana a cero!!!: Se usaron ' num2str(iter) ' iteraciones!']);
+        disp(['El Vector X encontrado que soluciona el problema de mínimos cuadrados es: ' mat2str(Xi)]);
+
+
 
 
 inicial = (Xo(1,3)*exp(Xo(1,1).*t))+(Xo(1,4)*exp(Xo(1,2).*t));
@@ -82,5 +97,7 @@ plot(t,y,'g:x')
 %------------- Código para las leyendas.
 figure(1)
 legend('Xk','Xo','X*','y*')
+
+
 
 %end
