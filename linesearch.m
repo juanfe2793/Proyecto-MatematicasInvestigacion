@@ -1,27 +1,24 @@
-function alpha = linesearch(x,deltax,f,i)
+function alfa = linesearch(x,g,pk,data)
 
 %Función encargada de calcular un alfa para busqueda lineal
 % Proyecto desarrollado por: Jaime Aristizabal y Juan Felipe Gómez.
 
-global func
+iteraciones = 100;
 
-%Line Search
-    for j=0:5
-        alpha      = (1/2)^j;
-        x_         = x;                     % store the current point
-        x          = x + alpha*deltax;      % find the updated value of x 
-        [f_update] = eval(func);            % evaluate the value of f in x+alpha*deltax
-                        
-                                            % Merit function used: M(x) = |f(x)|
-                                           
-        value1     = abs(f_update);
-        value2     = ((1 - alpha*2*(10^-4) )^(0.5) * abs(f));
-
-        if value1 <=  value2                % to find the accurate value of alpha
-            break;
-        end 
-        
-        x          = x_;                    % to update the stored value of x at each iteration
-    end                                     % end of Line Search
-    
+for i=0:iteraciones
+   
+   alfaT = (1/2)^i;
+   t = data(:,1);
+   y = data(:,2);
+   
+   value_1 = Fx((x+alfaT*pk),y,t);
+   value_2 = Fx(x,y,t) + (10e-4)*alfaT*g*pk;
+   
+   if value_1 < value_2
+      alfa = alfaT;
+      break
+   end
+   
+   alfa = alfaT;
+end
 end

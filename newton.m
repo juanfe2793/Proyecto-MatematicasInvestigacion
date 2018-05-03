@@ -5,26 +5,37 @@
 
 %Se cargan las variables necesarias para el desarrollo del algoritmo
 convergencia = 1;
+convergencia_2 = 1;
 iter = 0;
 Xi = Xo;
 error = 1e-6;
-alfa = 1;
-max_iter = 10000;
+max_iter = 100;
 
 %--------- Calculo Inicial de la función, gradiente y Hessiana ------------
 [f, g, Hn] = myfun(Xi,data);
+F(:,1) = Fx(Xi,data(:,2),data(:,1));
+G(:,1) = norm(g);
 
-while  (iter < max_iter) && (convergencia >= error)
+
+while  (iter < max_iter) && (convergencia >= error) && (convergencia_2 >= error)
 
     %-------- Configuración Algoritmo Newton--------------
-    pk = Hn\(-g);
-    
-   %-----------Calculos de cada iteración X ----------------------------
+    pk = (-g')/Hn;
+    alfa = linesearch(Xi,g,pk,data);
+    disp("Alfa")
+    disp(alfa)
+
+    %-----------Calculos de cada iteración X ----------------------------
    
-   Xj = Xi + alfa.*pk;
+    Xj = Xi + alfa.*pk;
     iter = iter + 1;
     
-    convergencia = norm(Xj - Xi);
+    %convergencia = Fx(Xj,data(:,2),data(:,1));
+    convergencia = norm(g);
+    convergencia_2 = (norm(Xj-Xi)/norm(Xi));
+    disp("Convergencia y Convergencia_2")
+    disp(convergencia)
+    disp(convergencia_2)
     
     Xi = Xj;
     
@@ -42,12 +53,14 @@ while  (iter < max_iter) && (convergencia >= error)
     %------------- Se vuelve a calcular myfun --------------------
     
     [f, g, Hn] = myfun(Xi,data);
+    F(:,iter+1) = Fx(Xj,data(:,2),data(:,1));
+    G(:,iter+1) = norm(g);
     
     %--------- Header para la tabla ------------------
 
-    fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
-    fprintf('-----------------------------------------------------------------------------------\n');
-    fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
+    %fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
+    %fprintf('-----------------------------------------------------------------------------------\n');
+    %fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
 
 end
 
@@ -81,6 +94,29 @@ plot(t,y,'g:x')
 figure(1)
 legend('Xk','Xo','X*','y*')
 
+
+%----------------------------------------------------------------
+%------------- Código para gráfico Segundo ----------------------
+
+figure(2)
+plot(F,'k:o')
+
+%------------- Código para gráfico Optimo ----------------------
+
+hold on
+figure(2)
+plot(G,'b')
+
+
+%------------- Código para gráfico puntos data ----------------------
+
+%hold on
+%figure(2)
+%plot(t,y,'g:x')
+
+%------------- Código para las leyendas.
+figure(2)
+legend('F(x)', '||g||')
 
 %end 
     

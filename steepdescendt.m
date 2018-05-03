@@ -6,35 +6,38 @@
   
 %Se cargan las variables necesarias para el desarrollo del algoritmo
 convergencia = 1;
+convergencia_2 = 1;
 iter = 0;
 Xi = Xo;
-error = 1e-6;
-alfa = 1;
+error = 5e-6;
 max_iter = 10000;
 
 %--------- Calculo Inicial de la función, gradiente y Hessiana ------------
-[f, g, Hn] = myfun(Xi,data);
+[y, g] = myfun(Xi,data);
 
+F(:,1) = Fx(Xi,data(:,2),data(:,1));
+G(:,1) = norm(g);
 
-
-while  (iter < max_iter) && (convergencia >= error)
+while  (iter < max_iter) && (convergencia >= error) && (convergencia_2 >= error)
    
-    %cadena = sprintf('iteracion No:', iter);
-    %disp(iter)
     
     %-------- Configuración Dirección Máximo Descenso--------------
     pk = -g';
     %disp('tamaño de g')
     %disp(size(pk))
+    %---------------- Calculo del Alfa ----------------------------------
+    alfa = linesearch(Xi,g,pk,data);
     
     %-----------Calculos de cada iteración X ----------------------------
     Xj = Xi + alfa.*pk;
     iter = iter + 1;
     
-    convergencia = norm(Xj - Xi);
-    %convergencia = abs(Xj - Xi);
-    %disp("Convergencia")
-    %disp(convergencia)
+    %convergencia = Fx(Xj,data(:,2),data(:,1));
+    convergencia = norm(g);
+    convergencia_2 = (norm(Xj-Xi)/norm(Xi));
+    disp("Convergencia y Convergencia_2")
+    disp(convergencia)
+    disp(convergencia_2)
     
     %disp("Esto es XJ")
     %disp(Xj)
@@ -43,7 +46,7 @@ while  (iter < max_iter) && (convergencia >= error)
     Xi = Xj;
     
     fsd = (Xi(1,3)*exp(Xi(1,1).*t))+(Xi(1,4)*exp(Xi(1,2).*t));
-    
+
     %------------------------ Código para pintar la gráfica --------------
     figure(1)
     plot(t,fsd,'r')
@@ -53,15 +56,21 @@ while  (iter < max_iter) && (convergencia >= error)
     %grid
     hold off
 
+    
+    
+    
     %------------- Se vuelve a calcular myfun --------------------
     
-    [f, g, Hn] = myfun(Xi,data);
+    [f, g] = myfun(Xi,data);
+    
+    F(:,iter+1) = Fx(Xj,data(:,2),data(:,1));
+    G(:,iter+1) = norm(g);
     
     %--------- Header para la tabla ------------------
 
-    fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
-    fprintf('-----------------------------------------------------------------------------------\n');
-    fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
+    %fprintf('Iter  |          x              |         |f(x)|            |    |x_k - x_(k-1)  | \n');
+    %fprintf('-----------------------------------------------------------------------------------\n');
+    %fprintf('  %2i  |  % 1.12e   |  % 1.12e    |  % 1.12e    \n',iter,Xi,abs(fsd),num2str(convergencia));  % print output matrix
 
 end
 
@@ -98,6 +107,27 @@ plot(t,y,'g:x')
 figure(1)
 legend('Xk','Xo','X*','y*')
 
+%----------------------------------------------------------------
+%------------- Código para gráfico inicial ----------------------
+
+figure(2)
+plot(F,'k:o')
+
+%------------- Código para gráfico Optimo ----------------------
+
+hold on
+figure(2)
+plot(G,'b')
 
 
-%end
+%------------- Código para gráfico puntos data ----------------------
+
+%hold on
+%figure(2)
+%plot(t,y,'g:x')
+
+%------------- Código para las leyendas.
+figure(2)
+legend('F(x)', '||g||')
+
+
