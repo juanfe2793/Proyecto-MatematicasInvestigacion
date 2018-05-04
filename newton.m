@@ -10,6 +10,7 @@ iter = 0;
 Xi = Xo;
 error = 1e-6;
 max_iter = 100;
+%alfa = 1;
 
 %--------- Calculo Inicial de la función, gradiente y Hessiana ------------
 [f, g, Hn] = myfun(Xi,data);
@@ -116,6 +117,9 @@ plot(G,'b')
 
 %------------- Código para las leyendas.
 figure(2)
+xlabel('Iteraciones');
+ylabel('X');
+title('Solución al sistema en cada iteración');
 legend('F(x)', '||g||')
 
 %end 
