@@ -27,8 +27,8 @@ while  (iter < max_iter) && (convergencia >= error) && (convergencia_2 >= error)
     %disp('tamaño de g')
     %disp(size(pk))
     %---------------- Calculo del Alfa ----------------------------------
-    alfa = linesearch(Xi,g,pk,data);
-    
+    %alfa = linesearch(Xi,g,pk,data);
+    alfa = 1;
     %-----------Calculos de cada iteración X ----------------------------
     Xj = Xi + alfa.*pk;
     iter = iter + 1;
@@ -135,3 +135,6 @@ title('Solución al sistema en cada iteración');
 legend('F(x)', '||g||')
 
 
+%------------- Código para guardar las tablas
+csvwrite('Tabla_F(x)_Steepdescent_Alfa_1.csv',F);
+csvwrite('Tabla_G_Steepdescent_Alfa_1.csv',G);

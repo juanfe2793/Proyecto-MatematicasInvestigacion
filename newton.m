@@ -22,7 +22,8 @@ while  (iter < max_iter) && (convergencia >= error) && (convergencia_2 >= error)
 
     %-------- Configuración Algoritmo Newton--------------
     pk = (-g')/Hn;
-    alfa = linesearch(Xi,g,pk,data);
+    %alfa = linesearch(Xi,g,pk,data);
+    alfa = 1;
     disp("Alfa")
     disp(alfa)
 
@@ -122,5 +123,6 @@ ylabel('X');
 title('Solución al sistema en cada iteración');
 legend('F(x)', '||g||')
 
-%end 
-    
+%------------- Código para guardar las tablas
+csvwrite('Tabla_F(x)_GaussNewton_Alfa_1.csv',F);
+csvwrite('Tabla_G_GaussNewton_Alfa_1.csv',G);

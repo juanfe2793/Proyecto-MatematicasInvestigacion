@@ -23,7 +23,6 @@ while  (iter < max_iter) && (convergencia >= error) && (convergencia_2 >= error)
     %-------- Configuración Algoritmo Newton--------------
     pk = (-g')/Hlm;
     alfa = linesearch(Xi,g,pk,data);
-    %alfa = 1;
     disp("Alfa")
     disp(alfa)
 
@@ -115,15 +114,17 @@ plot(G,'b')
 
 hold on
 figure(2)
-plot(UK,'r:x')
+plot(vuk,'r:x')
+disp('este es uk')
+disp(vuk)
 
 %------------- Código para las leyendas.
 figure(2)
 legend('F(x)', '||g||', 'uk')
 
 %------------- Código para guardar las tablas
-csvwrite('Tabla_F(x)_Levenberg_Alfa_Calculado.csv',F);
-csvwrite('Tabla_uk_Levenberg_Alfa_Calculado.csv',UK);
-csvwrite('Tabla_G_Levenberg_Alfa_Calculado.csv',G);
+csvwrite('Tabla_F(x).csv',F);
+csvwrite('Tabla_uk.csv',vuk);
+csvwrite('Tabla_G.csv',G);
 
     
